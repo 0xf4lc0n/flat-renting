@@ -1,4 +1,6 @@
 using FlatRenting.Data;
+using FlatRenting.Data.Repositories;
+using FlatRenting.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -18,6 +20,9 @@ try {
 
     // Add services to the container.
     builder.Services.AddDbContext<FlatRentingContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    builder.Services.AddSingleton<IUserRepository, UserRepository>();
+    builder.Services.AddSingleton<IAnnoucementRepository, AnnoucementRepository>();
+    builder.Services.AddSingleton<ICommentRepository, CommentRepository>();
 
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

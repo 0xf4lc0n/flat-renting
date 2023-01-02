@@ -1,7 +1,7 @@
-﻿namespace FlatRenting.Entities;
+﻿namespace FlatRenting.DTOs;
 
-public class Annoucement {
-    public required Guid Id { get; init; }
+public class AnnoucementDto
+{
     public required List<string> Pictures { get; set; }
     public required string Title { get; set; }
     public required decimal Price { get; set; }
@@ -12,6 +12,4 @@ public class Annoucement {
     public required string Address { get; set; }
     public required string Description { get; set; }
     public required Guid OwnerId { get; init; }
-    public required User Owner { get; init; }
-    public required List<Comment> Comments { get; set; }
 }
