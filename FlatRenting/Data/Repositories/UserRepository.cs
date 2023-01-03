@@ -10,7 +10,7 @@ public class UserRepository : IUserRepository
 {
     private readonly FlatRentingContext _ctx;
     public UserRepository(FlatRentingContext ctx) => _ctx = ctx;
-    public async Task AddUser(UserDto user)
+    public async Task AddUser(RegisterDto user)
     {
         if (await _ctx.Users.AnyAsync(u => u.Email.Equals(user.Email) || u.Login.Equals(user.Login)))
         {
@@ -32,6 +32,18 @@ public class UserRepository : IUserRepository
             throw new RepositoryException($"Cannot get user with Id '{id}'", ex);
         }
     }
+
+    public async Task<User> GetUser(string login, string password) {
+        try
+        {
+            return await _ctx.Users.FirstAsync(u => u.Login == login && u.Password == password);
+        }
+        catch (Exception ex)
+        {
+            throw new RepositoryException($"Cannot get user with login '{login}'", ex);
+        }
+    }
+
     public async Task UpdateUser(Guid id, UserDto newUser)
     {
         var user = await GetUser(id);

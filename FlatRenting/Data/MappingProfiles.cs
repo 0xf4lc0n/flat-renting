@@ -28,6 +28,18 @@ public static class MappingProfiles {
         RegistrationDate = user.RegistrationDate
     };
 
+    public static User ToEntity(this RegisterDto dto) => new() {
+        Id = Guid.NewGuid(),
+        Email = dto.Email,
+        FirstName = dto.FirstName,
+        LastName = dto.LastName,
+        Login = dto.Login,
+        Password = dto.Password,
+        Phone= dto.Phone,
+        RegistrationDate = DateTime.UtcNow,
+        Bio = string.Empty
+    };
+
     public static Comment ToEntity(this CreateCommentDto dto, Annoucement annoucement, User owner) => new() {
         Id = Guid.NewGuid(),
         Content = dto.Content,
@@ -42,7 +54,7 @@ public static class MappingProfiles {
         UserName = $"{comment.Owner.FirstName} + {comment.Owner.LastName}"
     };
 
-    public static Annoucement ToEntity(this AnnoucementDto dto, User owner) => new() {
+    public static Annoucement ToEntity(this CreateAnnoucementDto dto, User owner) => new() {
         Id = Guid.NewGuid(),
         Title = dto.Title,
         Address = dto.Address,

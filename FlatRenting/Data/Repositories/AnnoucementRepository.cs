@@ -9,7 +9,7 @@ namespace FlatRenting.Data.Repositories;
 public class AnnoucementRepository : IAnnoucementRepository {
     private readonly FlatRentingContext _ctx;
     public AnnoucementRepository(FlatRentingContext ctx) => _ctx = ctx;
-    public async Task AddAnnoucement(AnnoucementDto annoucement, User ower) {
+    public async Task AddAnnoucement(CreateAnnoucementDto annoucement, User ower) {
         var entity = annoucement.ToEntity(ower);
         await _ctx.Annoucements.AddAsync(entity);
         await _ctx.SaveChangesAsync();
@@ -42,7 +42,7 @@ public class AnnoucementRepository : IAnnoucementRepository {
         }
     }
 
-    public async Task UpdateAnnoucement(Guid id, Annoucement newAnnoucement) {
+    public async Task UpdateAnnoucement(Guid id, CreateAnnoucementDto newAnnoucement) {
         var annoucement = await GetAnnoucement(id);
         
         annoucement.Area = newAnnoucement.Area;
