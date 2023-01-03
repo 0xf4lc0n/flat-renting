@@ -1,3 +1,4 @@
 .vs/
 **/bin
 **/obj
+/FlatRenting/Logs/log.txt
