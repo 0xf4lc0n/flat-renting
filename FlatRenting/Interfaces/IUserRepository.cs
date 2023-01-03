@@ -7,5 +7,5 @@ public interface IUserRepository {
     Task AddUser(RegisterDto user);
     Task<User> GetUser(Guid id);
     Task<User> GetUser(string login, string password);
-    Task UpdateUser(Guid id, UserDto newUser);
+    Task UpdateUser(Guid id, EditUserDto newUser,  User loggedUser);
 }

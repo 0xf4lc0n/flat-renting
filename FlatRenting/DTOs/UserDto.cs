@@ -11,3 +11,13 @@ public class UserDto
     public string? Bio { get; set; }
     public required DateTime RegistrationDate { get; init; }
 }
+
+public class EditUserDto
+{
+    public required string FirstName { get; set; }
+    public required string LastName { get; set; }
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+    public required string Phone { get; set; }
+    public string? Bio { get; set; }
+}

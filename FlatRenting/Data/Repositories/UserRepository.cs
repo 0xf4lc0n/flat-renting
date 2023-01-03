@@ -44,16 +44,15 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public async Task UpdateUser(Guid id, UserDto newUser)
+    public async Task UpdateUser(Guid id, EditUserDto newUser, User loggedUser)
     {
         var user = await GetUser(id);
 
-        if (await _ctx.Users.AnyAsync(u => u.Email.Equals(newUser.Email) || u.Login.Equals(newUser.Login)))
+        if (await _ctx.Users.AnyAsync(u => u.Email.Equals(newUser.Email) && !u.Login.Equals(user.Login)))
         {
             throw new RepositoryException("User with given email or login already exists");
         }
 
-        user.Login = newUser.Login;
         user.Email = newUser.Email;
         user.FirstName = newUser.FirstName;
         user.LastName = newUser.LastName;
