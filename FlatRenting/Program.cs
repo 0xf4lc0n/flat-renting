@@ -20,6 +20,8 @@ try {
         .ReadFrom.Configuration(configuration)
         .CreateLogger();
 
+    Log.Logger.Debug("Using: " + $"appsettings.{builder.Environment.EnvironmentName}.json");
+
     // Add services to the container.
     builder.Services.AddSingleton(Log.Logger);
     builder.Services.AddDbContext<FlatRentingContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -43,6 +45,12 @@ try {
     });
     builder.Services.AddAuthorization();
 
+
+    builder.Services.AddCors(options => {
+        options.AddDefaultPolicy(
+            policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+    });
+
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -64,7 +72,9 @@ try {
     app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
     app.UseHttpsRedirection();
-    
+
+    app.UseCors();
+
     app.UseAuthentication();
     app.UseAuthorization();
 
