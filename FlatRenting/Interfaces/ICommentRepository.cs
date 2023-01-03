@@ -5,5 +5,5 @@ namespace FlatRenting.Interfaces;
 
 public interface ICommentRepository {
     Task AddComment(CreateCommentDto commentDto, Annoucement annoucement, User owner);
-    Task<IEnumerable<Comment>> GetComment(Guid annoucementId);
+    Task<IEnumerable<Comment>> GetComments(Guid annoucementId);
 }

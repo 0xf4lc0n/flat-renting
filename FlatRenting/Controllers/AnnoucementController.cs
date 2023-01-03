@@ -55,12 +55,14 @@ public class AnnoucementController : RestrictedApiController {
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAllAnnoucements() {
         var annoucements = await _annoucementRepository.GetAllAnnoucements();
         return Ok(annoucements);
     }
 
     [HttpGet("{userId}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAllAnnoucements(Guid userId) {
         var annoucements = await _annoucementRepository.GetAnnoucements(userId);
         return Ok(annoucements);
@@ -68,6 +70,7 @@ public class AnnoucementController : RestrictedApiController {
 
 
     [HttpGet("details/{id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAnnoucement(Guid annoucementId) {
         var annoucements = await _annoucementRepository.GetAnnoucement(annoucementId);
         return Ok(annoucements);

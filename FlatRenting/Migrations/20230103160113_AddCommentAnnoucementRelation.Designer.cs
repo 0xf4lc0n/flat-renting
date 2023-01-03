@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FlatRenting.Migrations
 {
     [DbContext(typeof(FlatRentingContext))]
-    [Migration("20230102221427_AddCommentAnnoucementRelation")]
+    [Migration("20230103160113_AddCommentAnnoucementRelation")]
     partial class AddCommentAnnoucementRelation
     {
         /// <inheritdoc />
@@ -152,7 +152,7 @@ namespace FlatRenting.Migrations
 
             modelBuilder.Entity("FlatRenting.Entities.Comment", b =>
                 {
-                    b.HasOne("FlatRenting.Entities.Annoucement", "Annoucement")
+                    b.HasOne("FlatRenting.Entities.Annoucement", null)
                         .WithMany("Comments")
                         .HasForeignKey("AnnoucementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -163,8 +163,6 @@ namespace FlatRenting.Migrations
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Annoucement");
 
                     b.Navigation("Owner");
                 });

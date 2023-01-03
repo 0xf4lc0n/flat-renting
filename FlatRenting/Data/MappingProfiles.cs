@@ -44,7 +44,6 @@ public static class MappingProfiles {
         Id = Guid.NewGuid(),
         Content = dto.Content,
         AnnoucementId = annoucement.Id,
-        Annoucement = annoucement,
         OwnerId = owner.Id,
         Owner = owner
     };

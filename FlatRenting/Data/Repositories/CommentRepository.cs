@@ -16,7 +16,7 @@ public class CommentRepository : ICommentRepository {
         await _ctx.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Comment>> GetComment(Guid annoucementId) {
+    public async Task<IEnumerable<Comment>> GetComments(Guid annoucementId) {
         try {
             return await _ctx.Comments.Where(c => c.AnnoucementId == annoucementId).ToListAsync();
         } catch (Exception ex) {
