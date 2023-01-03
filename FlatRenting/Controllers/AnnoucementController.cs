@@ -1,4 +1,5 @@
-﻿using FlatRenting.DTOs;
+﻿using FlatRenting.Data;
+using FlatRenting.DTOs;
 using FlatRenting.Entities;
 using FlatRenting.Exceptions;
 using FlatRenting.Interfaces;
@@ -57,14 +58,14 @@ public class AnnoucementController : RestrictedApiController {
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetAllAnnoucements() {
-        var annoucements = await _annoucementRepository.GetAllAnnoucements();
+        var annoucements = (await _annoucementRepository.GetAllAnnoucements()).Select(a => a.ToDto());
         return Ok(annoucements);
     }
 
     [HttpGet("{userId}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAllAnnoucements(Guid userId) {
-        var annoucements = await _annoucementRepository.GetAnnoucements(userId);
+        var annoucements = (await _annoucementRepository.GetAnnoucements(userId)).Select(a => a.ToDto());;
         return Ok(annoucements);
     }
 
@@ -72,7 +73,7 @@ public class AnnoucementController : RestrictedApiController {
     [HttpGet("details/{id}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAnnoucement(Guid annoucementId) {
-        var annoucements = await _annoucementRepository.GetAnnoucement(annoucementId);
+        var annoucements = (await _annoucementRepository.GetAnnoucement(annoucementId)).ToDto();
         return Ok(annoucements);
     }
 }

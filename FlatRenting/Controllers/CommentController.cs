@@ -1,4 +1,5 @@
-﻿using FlatRenting.DTOs;
+﻿using FlatRenting.Data;
+using FlatRenting.DTOs;
 using FlatRenting.Entities;
 using FlatRenting.Exceptions;
 using FlatRenting.Interfaces;
@@ -21,7 +22,7 @@ public class CommentController : RestrictedApiController {
     [HttpGet("{annoucementId}")]
     public async Task<IActionResult> GetComments(Guid annoucementId) {
         try {
-            var comments = await _commentRepository.GetComments(annoucementId);
+            var comments = (await _commentRepository.GetComments(annoucementId)).Select(c => c.ToDto());
             return Ok(comments);
         } catch (RepositoryException ex) {
             _logger.Error(ex, $"Cannot fetch comments for annoucement with Id '{annoucementId}'");

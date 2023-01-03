@@ -871,3 +871,12 @@ FlatRenting.Exceptions.RepositoryException: Cannot get user with Id 'ade8df72-b0
 2023-01-03 17:03:59.435 +01:00 [INF] HTTP POST /api/comment/1e8d62b4-6827-4bce-9a7a-d40145988d93 responded 200 in 17.0142 ms
 2023-01-03 17:04:03.264 +01:00 [INF] HTTP GET /api/Annoucement responded 200 in 8.2095 ms
 2023-01-03 17:04:54.377 +01:00 [INF] HTTP GET /api/comment/1e8d62b4-6827-4bce-9a7a-d40145988d93 responded 200 in 27.2780 ms
+2023-01-03 17:18:50.519 +01:00 [INF] HTTP GET /swagger/index.html responded 200 in 365.0036 ms
+2023-01-03 17:18:51.087 +01:00 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 14.8187 ms
+2023-01-03 17:18:51.777 +01:00 [INF] HTTP GET /swagger/favicon-16x16.png responded 200 in 4.9965 ms
+2023-01-03 17:18:52.386 +01:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 362.8432 ms
+2023-01-03 17:18:59.140 +01:00 [INF] HTTP GET /api/Annoucement responded 200 in 2335.9017 ms
+2023-01-03 17:19:47.877 +01:00 [INF] HTTP GET /api/Annoucement responded 200 in 75.8284 ms
+2023-01-03 17:19:48.239 +01:00 [INF] HTTP GET /swagger/index.html responded 200 in 54.7822 ms
+2023-01-03 17:19:49.107 +01:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 52.1503 ms
+2023-01-03 17:19:55.513 +01:00 [INF] HTTP GET /api/Annoucement responded 200 in 158.6576 ms

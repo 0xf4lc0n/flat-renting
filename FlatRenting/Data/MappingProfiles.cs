@@ -50,7 +50,7 @@ public static class MappingProfiles {
 
     public static GetCommentDto ToDto(this Comment comment) => new() {
         Content = comment.Content,
-        UserName = $"{comment.Owner.FirstName} + {comment.Owner.LastName}"
+        UserName = $"{comment.Owner.FirstName} {comment.Owner.LastName}"
     };
 
     public static Annoucement ToEntity(this CreateAnnoucementDto dto, User owner) => new() {
@@ -69,7 +69,7 @@ public static class MappingProfiles {
         Comments = new List<Comment>()
     };
 
-    public static AnnoucementDto ToDto(this Annoucement annoucement, User owner) => new() {
+    public static AnnoucementDto ToDto(this Annoucement annoucement) => new() {
         Title = annoucement.Title,
         Address = annoucement.Address,
         Area = annoucement.Area,
@@ -79,6 +79,7 @@ public static class MappingProfiles {
         Price = annoucement.Price,
         YearBuild = annoucement.YearBuild,
         RoomsNumber = annoucement.RoomsNumber,
-        OwnerId = owner.Id,
+        Owner = annoucement.Owner,
+        Comments = annoucement.Comments.Select(c => c.ToDto()),
     };
 }
