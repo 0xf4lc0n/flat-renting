@@ -5,27 +5,25 @@ using System.Runtime.CompilerServices;
 namespace FlatRenting.Data;
 
 public static class MappingProfiles {
-    public static User ToEntity(this UserDto dto) => new() {
-        Id = Guid.NewGuid(),
-        Email = dto.Email,
-        FirstName = dto.FirstName,
-        LastName = dto.LastName,
-        Login = dto.Login,
-        Password = dto.Password,
-        Bio = dto.Bio,
-        Phone = dto.Phone,
-        RegistrationDate = dto.RegistrationDate
-    };
-
     public static UserDto ToDto(this User user) => new() {
+        Id = user.Id,
         Email = user.Email,
         FirstName = user.FirstName,
         LastName = user.LastName,
-        Login = user.Login,
         Password = user.Password,
         Bio = user.Bio,
         Phone = user.Phone,
         RegistrationDate = user.RegistrationDate
+    };
+
+    public static LoggedUsedDto ToLoggedDto(this User user) => new() {
+        Id = user.Id,
+        Email = user.Email,
+        FirstName = user.FirstName,
+        LastName = user.LastName,
+        Login = user.Login,
+        Bio = user.Bio,
+        Phone = user.Phone,
     };
 
     public static User ToEntity(this RegisterDto dto) => new() {

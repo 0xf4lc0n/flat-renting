@@ -16,7 +16,7 @@ services:
     networks:
       - flat-renting-network
   web-api:
-    image: flat-renting-api
+    image: falcon64/flat-renting-api:0.6
     depends_on: 
       - "db"
     ports:

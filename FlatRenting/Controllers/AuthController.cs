@@ -1,4 +1,5 @@
-﻿using FlatRenting.Exceptions;
+﻿using FlatRenting.Data;
+using FlatRenting.Exceptions;
 using FlatRenting.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -60,12 +61,12 @@ public class AuthController : ControllerBase {
             _logger.Information("Token: {Token}", token);
 
             HttpContext.Response.Headers.Add("Authorization", "Bearer " + token);
+
+            return Ok(user.ToLoggedDto());
         } catch (RepositoryException ex) {
             _logger.Error(ex, "Cannot login user with data {@loginDto}", loginDto);
             return BadRequest("Login or password are incorrect");
         }
-
-        return Ok();
     }
 
     [HttpGet("activate")]

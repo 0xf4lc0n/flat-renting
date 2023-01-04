@@ -4,6 +4,7 @@ using FlatRenting.Interfaces;
 using FlatRenting.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
@@ -48,7 +49,7 @@ try {
 
     builder.Services.AddCors(options => {
         options.AddDefaultPolicy(
-            policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+            policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod().WithExposedHeaders("Authorization"));
     });
 
     builder.Services.AddControllers();
@@ -60,6 +61,11 @@ try {
     builder.Host.UseSerilog();
 
     var app = builder.Build();
+
+    using (var scope = app.Services.CreateScope()) {
+        var db = scope.ServiceProvider.GetRequiredService<FlatRentingContext>();
+        db.Database.Migrate();
+    }
 
     app.UseSerilogRequestLogging();
 
@@ -79,7 +85,6 @@ try {
     app.UseAuthorization();
 
     app.UseMiddleware<JwtMiddleware>();
-
     app.MapControllers();
 
     app.Run();
