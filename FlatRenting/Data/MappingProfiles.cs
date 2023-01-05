@@ -68,6 +68,7 @@ public static class MappingProfiles {
     };
 
     public static AnnoucementDto ToDto(this Annoucement annoucement) => new() {
+        Id = annoucement.Id,
         Title = annoucement.Title,
         Address = annoucement.Address,
         Area = annoucement.Area,

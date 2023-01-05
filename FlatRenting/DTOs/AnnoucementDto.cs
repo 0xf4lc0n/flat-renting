@@ -4,6 +4,7 @@ namespace FlatRenting.DTOs;
 
 public class AnnoucementDto
 {
+    public required Guid Id { get; init; }
     public required List<string> Pictures { get; set; }
     public required string Title { get; set; }
     public required decimal Price { get; set; }
