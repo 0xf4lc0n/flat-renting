@@ -18,7 +18,7 @@ public class CommentRepository : ICommentRepository {
 
     public async Task<IEnumerable<Comment>> GetComments(Guid annoucementId) {
         try {
-            return await _ctx.Comments.Where(c => c.AnnoucementId == annoucementId).ToListAsync();
+            return await _ctx.Comments.Where(c => c.AnnoucementId == annoucementId).Include(c => c.Owner).ToListAsync();
         } catch (Exception ex) {
             throw new RepositoryException($"Cannot get comments for annoucement with Id '{annoucementId}'", ex);
         }
