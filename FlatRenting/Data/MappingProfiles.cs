@@ -26,6 +26,16 @@ public static class MappingProfiles {
         Phone = user.Phone,
     };
 
+    public static AnnoucementOwnerDto ToAnnoucementOwnerDto(this User user) => new() {
+        Id = user.Id,
+        Email = user.Email,
+        FirstName = user.FirstName,
+        LastName = user.LastName,
+        Bio = user.Bio,
+        Phone = user.Phone,
+        RegistrationDate = user.RegistrationDate
+    };
+
     public static User ToEntity(this RegisterDto dto) => new() {
         Id = Guid.NewGuid(),
         Email = dto.Email,
@@ -35,6 +45,7 @@ public static class MappingProfiles {
         Password = dto.Password,
         Phone= dto.Phone,
         RegistrationDate = DateTime.UtcNow,
+        IsActive = false,
         Bio = string.Empty
     };
 
@@ -78,7 +89,7 @@ public static class MappingProfiles {
         Price = annoucement.Price,
         YearBuild = annoucement.YearBuild,
         RoomsNumber = annoucement.RoomsNumber,
-        Owner = annoucement.Owner,
+        Owner = annoucement.Owner.ToAnnoucementOwnerDto(),
         Comments = annoucement.Comments.Select(c => c.ToDto()),
     };
 }

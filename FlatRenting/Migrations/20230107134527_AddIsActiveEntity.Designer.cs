@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FlatRenting.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FlatRenting.Migrations
 {
     [DbContext(typeof(FlatRentingContext))]
-    partial class FlatRentingContextModelSnapshot : ModelSnapshot
+    [Migration("20230107134527_AddIsActiveEntity")]
+    partial class AddIsActiveEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

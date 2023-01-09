@@ -1,6 +1,4 @@
-﻿using FlatRenting.Entities;
-
-namespace FlatRenting.DTOs;
+﻿namespace FlatRenting.DTOs;
 
 public class AnnoucementDto
 {
@@ -14,7 +12,7 @@ public class AnnoucementDto
     public required int YearBuild { get; set; }
     public required string Address { get; set; }
     public required string Description { get; set; }
-    public required User Owner { get; init; }
+    public required AnnoucementOwnerDto Owner { get; init; }
     public required IEnumerable<GetCommentDto> Comments { get; set; }
 }
 

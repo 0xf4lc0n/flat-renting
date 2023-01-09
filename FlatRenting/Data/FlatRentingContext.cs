@@ -8,6 +8,7 @@ public class FlatRentingContext : DbContext {
     public DbSet<User> Users { get; set; }
     public DbSet<Annoucement> Annoucements { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<Activation> Activations { get; set; }
 
     public FlatRentingContext(DbContextOptions<FlatRentingContext> options, IConfiguration config) : base(options) {
         _config = config;

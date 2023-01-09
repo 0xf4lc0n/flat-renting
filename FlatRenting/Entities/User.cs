@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace FlatRenting.Entities;
+﻿namespace FlatRenting.Entities;
 
 public class User {
     public required Guid Id { get; init; }
@@ -12,4 +10,5 @@ public class User {
     public required string Phone { get; set; }
     public string? Bio { get; set; }
     public required DateTime RegistrationDate { get; init; }
+    public required bool IsActive { get; set; }
 }
