@@ -2,6 +2,7 @@ using FlatRenting.Data;
 using FlatRenting.Data.Repositories;
 using FlatRenting.Interfaces;
 using FlatRenting.Middleware;
+using FlatRenting.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +30,9 @@ try {
     builder.Services.AddTransient<IUserRepository, UserRepository>();
     builder.Services.AddTransient<IAnnoucementRepository, AnnoucementRepository>();
     builder.Services.AddTransient<ICommentRepository, CommentRepository>();
+    builder.Services.AddTransient<IActivationRepository, ActivationRepository>();
+    builder.Services.AddSingleton<IEmailService, EmailService>();
+    builder.Services.AddSingleton<IPhotoService, PhotoService>();
 
     builder.Services.AddAuthentication(opt => {
         opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
