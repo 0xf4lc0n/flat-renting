@@ -70,7 +70,7 @@ public class AnnoucementController : RestrictedApiController {
     }
 
 
-    [HttpGet("details/{id}")]
+    [HttpGet("details/{annoucementId}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetAnnoucement(Guid annoucementId) {
         var annoucements = (await _annoucementRepository.GetAnnoucement(annoucementId)).ToDto();
