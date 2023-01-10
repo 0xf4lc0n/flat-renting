@@ -16,11 +16,11 @@ public class ActivationRepository : IActivationRepository {
         return activation.Id;
     }
 
-    public async Task<Activation> GetActivation(Guid userId) {
+    public async Task<Activation> GetActivation(Guid activationId) {
         try {
-            return await _ctx.Activations.FirstAsync(a => a.UserId == userId);
+            return await _ctx.Activations.FirstAsync(a => a.Id == activationId);
         } catch(Exception ex) {
-            throw new RepositoryException($"Cannot get activation for user with id '{userId}'", ex);
+            throw new RepositoryException($"Cannot get activation with id '{activationId}'", ex);
         }
     }
 
