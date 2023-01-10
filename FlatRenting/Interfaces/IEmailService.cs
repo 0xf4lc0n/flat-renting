@@ -3,5 +3,5 @@
 namespace FlatRenting.Interfaces;
 
 public interface IEmailService {
-    Task SendEmail(ReceiverData receiver, EmailData email);
+    void SendEmail(ReceiverData receiver, EmailData email);
 }

@@ -53,7 +53,7 @@ public class AuthController : ControllerBase {
             var activationUrl = $"{_config["Kestrel:Endpoints:HttpsEndpoint:Url"]}/api/auth/activate/{activationCode}";
             var message = $"Aby aktywować konto kliknij w link: {activationUrl}";
             var emailContent = new EmailData("Aktywacja konta w serwisie Flat Lender", message, message);
-            await _email.SendEmail(receiverData, emailContent);
+            _email.SendEmail(receiverData, emailContent);
         } catch (EmailException ex) {
             _logger.Error(ex, "Cannot send activation code to the user with data {@registerDto}", registerDto);
             return BadRequest("Fatal error. Please contact administration");

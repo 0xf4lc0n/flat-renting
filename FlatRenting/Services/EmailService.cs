@@ -3,6 +3,8 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using SendGrid.Helpers.Mail.Model;
 using System;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace FlatRenting.Services;
@@ -16,20 +18,21 @@ public class EmailService : IEmailService {
         _logger = logger;
     }
 
-    public async Task SendEmail(ReceiverData receiver, EmailData email) {
+    public void SendEmail(ReceiverData receiver, EmailData email) {
+        var host = _config["Email:Host"];
+        var port = int.Parse(_config["Email:Port"]);
         var apiKey = _config["Email:ApiKey"];
+        var secretKey = _config["Email:Secretkey"];
+
+
+        var client = new SmtpClient(host, port) {
+            Credentials = new NetworkCredential(apiKey, secretKey),
+            EnableSsl = true
+        };
+
 
         try {
-            var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("flat.renatl@gmail.com", "Flat Lender");
-            var to = new EmailAddress(receiver.Email, receiver.FullName);
-            var msg = MailHelper.CreateSingleEmail(from, to, email.Subject, email.PlainTextContent, email.HtmlContent);
-            var response = await client.SendEmailAsync(msg);
-
-            if (!response.IsSuccessStatusCode) {
-                _logger.Debug("Response: {@Response}", response);
-                throw new EmailException("SendGrid returned non OK code");
-            }
+            client.Send("flat.renatl@gmail.com", receiver.Email, email.Subject, email.PlainTextContent);
         } catch (Exception ex) {
             throw new EmailException("Cannot send email message", ex);
         }
