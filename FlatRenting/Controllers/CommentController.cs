@@ -30,6 +30,24 @@ public class CommentController : RestrictedApiController {
         }
     }
 
+    [HttpDelete("{commentId}")]
+    public async Task<IActionResult> DeleteComment(Guid commentId) {
+        try {
+            var comment = await _commentRepository.GetComment(commentId);
+
+            if (comment.Owner.Id != GetAuthorizedUserFromCtx().Id) {
+                return BadRequest("Cannot delete unowned comment");
+            }
+
+            await _commentRepository.DeleteComment(comment);
+
+            return Ok();
+        } catch (RepositoryException ex) {
+            _logger.Error(ex, $"Cannot delete comment with Id '{commentId}'");
+            return BadRequest("Cannot fetch comments for given annoucement");
+        }
+    }
+
     [HttpPost("{annoucementId}")]
     public async Task<IActionResult> AddComment(Guid annoucementId, CreateCommentDto commentDto) {
         try {

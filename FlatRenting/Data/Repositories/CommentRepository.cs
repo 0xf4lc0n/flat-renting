@@ -23,4 +23,17 @@ public class CommentRepository : ICommentRepository {
             throw new RepositoryException($"Cannot get comments for annoucement with Id '{annoucementId}'", ex);
         }
     }
+
+    public async Task<Comment> GetComment(Guid commentId) {
+        try {
+            return await _ctx.Comments.Include(c => c.Owner).FirstAsync(c => c.Id == commentId);
+        } catch (RepositoryException ex) {
+            throw new RepositoryException($"Cannot get comment with Id '{commentId}", ex);
+        }
+    }
+
+    public async Task DeleteComment(Comment comment) {
+        _ctx.Comments.Remove(comment);
+        await _ctx.SaveChangesAsync();
+    }
 }

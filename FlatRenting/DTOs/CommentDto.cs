@@ -7,6 +7,7 @@ public class CreateCommentDto
 
 public class GetCommentDto
 {
+    public required Guid Id { get; init; }
     public required string Content { get; set; }
     public required string UserName { get; set; }
 }
