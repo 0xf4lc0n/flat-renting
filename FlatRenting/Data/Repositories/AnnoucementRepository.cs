@@ -22,7 +22,7 @@ public class AnnoucementRepository : IAnnoucementRepository {
     }
 
     public async Task<IEnumerable<Annoucement>> GetAllAnnoucements() {
-        return await _ctx.Annoucements.Include(a => a.Owner).Include(a => a.Comments).ToListAsync();
+        return await _ctx.Annoucements.Include(a => a.Owner).Include(a => a.Comments).ThenInclude(c => c.Owner).ToListAsync();
     }
 
     public async Task<Annoucement> GetAnnoucement(Guid id) {

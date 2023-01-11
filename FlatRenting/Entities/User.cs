@@ -11,4 +11,6 @@ public class User {
     public string? Bio { get; set; }
     public required DateTime RegistrationDate { get; init; }
     public required bool IsActive { get; set; }
+    public List<Annoucement> Annoucements { get; set; }
+    public List<Comment> Comments { get; set; }
 }

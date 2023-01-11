@@ -16,4 +16,14 @@ public class FlatRentingContext : DbContext {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql(_config.GetConnectionString("DefaultConnection"));
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Owner)
+            .WithMany(o => o.Comments);
+
+        modelBuilder.Entity<Annoucement>()
+            .HasOne(a => a.Owner)
+            .WithMany(o => o.Annoucements);
+    }
 }
