@@ -60,7 +60,8 @@ public static class MappingProfiles {
     public static GetCommentDto ToDto(this Comment comment) => new() {
         Id =  comment.Id,
         Content = comment.Content,
-        UserName = $"{comment.Owner.FirstName} {comment.Owner.LastName}"
+        UserName = $"{comment.Owner.FirstName} {comment.Owner.LastName}",
+        OwnerId = comment.OwnerId
     };
 
     public static Annoucement ToEntity(this CreateAnnoucementDto dto, User owner) => new() {

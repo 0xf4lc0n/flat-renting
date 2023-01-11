@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using StackExchange.Redis;
 using System.Text;
 
 try {
@@ -33,6 +34,8 @@ try {
     builder.Services.AddTransient<IActivationRepository, ActivationRepository>();
     builder.Services.AddSingleton<IEmailService, EmailService>();
     builder.Services.AddSingleton<IPhotoService, PhotoService>();
+    builder.Services.AddSingleton<ICryptoService, CryptoService>();
+    builder.Services.AddSingleton<IRandomService, RandomService>();
 
     builder.Services.AddAuthentication(opt => {
         opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -50,6 +53,8 @@ try {
     });
     builder.Services.AddAuthorization();
 
+    var multiplexer = ConnectionMultiplexer.Connect(builder.Configuration["Cache:Address"]);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 
     builder.Services.AddCors(options => {
         options.AddDefaultPolicy(

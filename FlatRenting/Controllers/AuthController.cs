@@ -1,9 +1,12 @@
 ﻿using FlatRenting.Data;
+using FlatRenting.DTOs;
+using FlatRenting.Entities;
 using FlatRenting.Exceptions;
 using FlatRenting.Interfaces;
 using FlatRenting.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -18,13 +21,21 @@ public class AuthController : ControllerBase {
     private readonly ILogger _logger;
     private readonly IConfiguration _config;
     private readonly IEmailService _email;
+    private readonly ICryptoService _crypto;
+    private readonly IRandomService _random;
+    private readonly IConnectionMultiplexer _redis;
+    private readonly IDatabase _database;
 
-    public AuthController(IUserRepository userRepository, ILogger logger, IConfiguration config, IEmailService email, IActivationRepository activationRepository) {
+    public AuthController(IUserRepository userRepository, ILogger logger, IConfiguration config, IEmailService email, IActivationRepository activationRepository, ICryptoService crypto, IRandomService random, IConnectionMultiplexer redis) {
         _userRepository = userRepository;
         _logger = logger;
         _config = config;
         _email = email;
         _activationRepository = activationRepository;
+        _crypto = crypto;
+        _random = random;
+        _redis = redis;
+        _database = _redis.GetDatabase();
     }
 
     [HttpPost("register")]
@@ -32,7 +43,8 @@ public class AuthController : ControllerBase {
         Guid userId;
 
         try {
-            userId = await _userRepository.AddUser(registerDto);
+            var dto = _crypto.HashPassword(registerDto);
+            userId = await _userRepository.AddUser(dto);
         } catch (RepositoryException ex) {
             _logger.Error(ex, "Cannot register user with data {@registerDto}", registerDto);
             return BadRequest("Given email address or login are taken");
@@ -50,7 +62,7 @@ public class AuthController : ControllerBase {
 
         try {
             var receiverData = new ReceiverData(registerDto.Email, $"{registerDto.FirstName} {registerDto.LastName}");
-            var activationUrl = $"{_config["Kestrel:Endpoints:HttpsEndpoint:Url"]}/api/auth/activate/{activationCode}";
+            var activationUrl = $"{_config["ConfirmationBaseUrl"]}/api/auth/activate/{activationCode}";
             var message = $"Aby aktywować konto kliknij w link: {activationUrl}";
             var emailContent = new EmailData("Aktywacja konta w serwisie Flat Lender", message, message);
             _email.SendEmail(receiverData, emailContent);
@@ -67,10 +79,14 @@ public class AuthController : ControllerBase {
     public async Task<IActionResult> Login(LoginDto loginDto) {
 
         try {
-            var user = await _userRepository.GetUser(loginDto.Login, loginDto.Password);
+            var user = await _userRepository.GetUserByLogin(loginDto.Login);
 
             if (!user.IsActive) {
                 return BadRequest("Account have to be activated. Check your email address.");
+            }
+
+            if (!_crypto.IsPasswordValid(loginDto.Password, user.Password)) {
+                return BadRequest("Login or password are incorrect");
             }
 
             var issuer = _config["Jwt:Issuer"];
@@ -121,4 +137,54 @@ public class AuthController : ControllerBase {
 
         return Ok();
     }
+
+    [HttpGet("password/forget")]
+    public async Task<IActionResult> Forget(string emailAddress) {
+        User user;
+
+        try {
+            user = await _userRepository.GetUser(emailAddress);
+        } catch (RepositoryException ex) {
+            _logger.Error(ex, $"Cannot reset password for user with email address '{emailAddress}'");
+            return BadRequest("Cannot reset password");
+        }
+
+        var code = _random.GenerateRandomString(8);
+        _database.StringSet(emailAddress, code);
+        _database.KeyExpire(emailAddress, DateTime.Now.AddMinutes(5));
+
+        var receiverData = new ReceiverData(user.Email, $"{user.FirstName} {user.LastName}");
+        var message = $"Aby zresetować hasło użyj następującego kodu: {code}";
+        var emailContent = new EmailData("Resetowanie hasła w serwisie Flat Lender", message, message);
+        _email.SendEmail(receiverData, emailContent);
+
+        return Ok();
+    }
+
+    [HttpPost("password/reset")]
+    public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto) {
+        var code = _database.StringGet(resetPasswordDto.Email);
+
+        if (code.IsNull) {
+            _logger.Error("Reset code for user '{Email}' is not present", resetPasswordDto.Email);
+            return BadRequest("Cannot reset password");
+        }
+
+        if (code != resetPasswordDto.Code) {
+            _logger.Error("User '{Email}' provided invalid code for password reset", resetPasswordDto.Email);
+            return BadRequest("Cannot reset password");
+        }
+
+        var newPassword = _crypto.HashPassword(resetPasswordDto.NewPassword);
+
+        try {
+            await _userRepository.ChangeUserPassword(resetPasswordDto.Email, newPassword);
+        } catch (RepositoryException ex) {
+            _logger.Error(ex, "Cannot reset password for user '{Email}'", resetPasswordDto.Email);
+            return BadRequest("Cannot reset password");
+        }
+
+        return Ok();
+    }
+
 }

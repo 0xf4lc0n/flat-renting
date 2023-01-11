@@ -28,9 +28,9 @@ public class UserRepository : IUserRepository {
         }
     }
 
-    public async Task<User> GetUser(string login, string password) {
+    public async Task<User> GetUserByLogin(string login) {
         try {
-            return await _ctx.Users.FirstAsync(u => u.Login == login && u.Password == password);
+            return await _ctx.Users.FirstAsync(u => u.Login == login);
         } catch (Exception ex) {
             throw new RepositoryException($"Cannot get user with login '{login}'", ex);
         }
@@ -57,6 +57,13 @@ public class UserRepository : IUserRepository {
         await _ctx.SaveChangesAsync();
     }
 
+    public async Task ChangeUserPassword(string userEmail, string newPassword) {
+        var user = await GetUser(userEmail);
+        user.Password = newPassword;
+        _ctx.Users.Update(user);
+        await _ctx.SaveChangesAsync();
+    }
+
     public async Task ActivateUser(Guid userId) {
         var user = await GetUser(userId);
         user.IsActive = true;
@@ -68,5 +75,13 @@ public class UserRepository : IUserRepository {
         var user = await GetUser(userId);
         _ctx.Users.Remove(user);
         await _ctx.SaveChangesAsync();
+    }
+
+    public async Task<User> GetUser(string email) {
+        try {
+            return await _ctx.Users.FirstAsync(u => u.Email == email);
+        } catch (Exception ex) {
+            throw new RepositoryException($"Cannot get user with email '{email}'", ex);
+        }
     }
 }
