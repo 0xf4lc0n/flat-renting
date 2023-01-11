@@ -146,7 +146,7 @@ public class AuthController : ControllerBase {
             user = await _userRepository.GetUser(emailAddress);
         } catch (RepositoryException ex) {
             _logger.Error(ex, $"Cannot reset password for user with email address '{emailAddress}'");
-            return BadRequest("Cannot reset password");
+            return Ok();
         }
 
         var code = _random.GenerateRandomString(8);
