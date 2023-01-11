@@ -27,7 +27,7 @@ public class AnnoucementRepository : IAnnoucementRepository {
 
     public async Task<Annoucement> GetAnnoucement(Guid id) {
         try {
-            return await _ctx.Annoucements.Include(a => a.Owner).Include(a => a.Comments).FirstAsync(a => a.Id == id);
+            return await _ctx.Annoucements.Include(a => a.Owner).Include(a => a.Comments).ThenInclude(c => c.Owner).FirstAsync(a => a.Id == id);
         } catch (Exception ex) {
             throw new RepositoryException($"Cannot get annoucement with Id '{id}'", ex);
         }
@@ -36,7 +36,7 @@ public class AnnoucementRepository : IAnnoucementRepository {
 
     public async Task<IEnumerable<Annoucement>> GetAnnoucements(Guid ownerId) {
         try {
-            return await _ctx.Annoucements.Where(a => a.OwnerId == ownerId).Include(a => a.Owner).Include(a => a.Comments).ToListAsync();
+            return await _ctx.Annoucements.Where(a => a.OwnerId == ownerId).Include(a => a.Owner).Include(a => a.Comments).ThenInclude(c => c.Owner).ToListAsync();
         } catch (Exception ex) {
             throw new RepositoryException($"Cannot get annoucements of user with Id '{ownerId}'", ex);
         }
