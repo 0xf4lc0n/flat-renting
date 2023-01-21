@@ -20,6 +20,7 @@ public class PhotoService : IPhotoService {
             File = new FileDescription(imgFile.FileName, stream),
             UniqueFilename = true,
             Overwrite = false,
+            Transformation = new Transformation().Width(640).Height(480).Crop("scale")
         };
 
         var uploadResult = await cloudinary.UploadAsync(uploadParams);
